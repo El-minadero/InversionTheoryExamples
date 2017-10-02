@@ -3,7 +3,7 @@ Created on Sep 25, 2017
 
 @author: kevinmendoza
 '''
-import root.directsolve as ds
+import root.gravity2d.directsolve as ds
 import matplotlib        as mpl
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as grd
@@ -36,7 +36,7 @@ def _plot_model_data(axis,axis2,data):
     axis.set_ylabel("Depth (m)",fontsize=8)
    
     im = axis.imshow(data["Image"],aspect='auto',origin=[0,z_span[0]],\
-                cmap=mpl.cm.get_cmap("plasma",lut=400),extent=(x_span[0],x_span[1],z_span[1],z_span[0]))
+                cmap=mpl.cm.get_cmap("plasma",lut=400),extent=(x_span[0],x_span[1],-225,-25))
     axis.xaxis.tick_top()
     cbar = plt.colorbar(im,cax=axis2)
     cbar.set_label('Density Anomaly (kg/m^3)')
@@ -92,8 +92,9 @@ def _make_cell_image(cells,model):
     data_index = 0
     for x in img_x_coords:
         for z in img_z_coords:
+            newz = int(size[1]- z - cellz)
             cell = PILCell(size=(int(cellx),int(cellz)),value=data[data_index])
-            img.paste(cell.getImg(),(int(x),int(z)),mask=cell.getImg())
+            img.paste(cell.getImg(),(int(x),newz),mask=cell.getImg())
             data_index+=1
     return img
 

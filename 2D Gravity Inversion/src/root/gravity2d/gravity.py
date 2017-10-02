@@ -65,7 +65,7 @@ class D2GravityModel():
     def getModelLength(self):
         return self.x_offsets.size
     
-    def functionBasisFromX(self,x_prime):
+    def get_function_basis(self,x_prime):
         
         x00     = np.add(self.x_offsets, -x_prime)
         x11     = np.add(   x00,    -self.dx)

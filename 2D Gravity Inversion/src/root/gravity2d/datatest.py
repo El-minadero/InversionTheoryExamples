@@ -4,7 +4,7 @@ Created on Sep 24, 2017
 @author: kevinmendoza
 '''
 import unittest
-from root.data import DataContainer
+from root.gravity2d.data import DataContainer
 
 class Test(unittest.TestCase):
 

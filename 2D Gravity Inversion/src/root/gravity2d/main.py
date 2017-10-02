@@ -3,10 +3,10 @@ Created on Sep 23, 2017
 
 @author: kevinmendoza
 '''
-from    root.data       import DataContainer
-from    root.gravity    import D2GravityModel
-import  root.directsolve as solve
-import  root.modelplot   as p
+from    root.gravity2d.data       import DataContainer
+from    root.gravity2d.gravity    import D2GravityModel
+import  root.gravity2d.directsolve as solve
+import  root.gravity2d.modelplot   as p
 
 
 if __name__ == '__main__':

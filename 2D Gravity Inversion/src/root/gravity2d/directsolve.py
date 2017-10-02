@@ -4,8 +4,8 @@ Created on Sep 24, 2017
 @author: kevinmendoza
 '''
 import numpy as np
-from root.gravity import D2GravityModel
-from root.data import DataContainer
+from root.gravity2d.gravity import D2GravityModel
+from root.gravity2d.data import DataContainer
 np.set_printoptions(suppress=True)
 def main():
     pass

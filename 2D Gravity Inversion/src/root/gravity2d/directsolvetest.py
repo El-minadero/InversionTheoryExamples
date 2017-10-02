@@ -4,9 +4,9 @@ Created on Sep 24, 2017
 @author: kevinmendoza
 '''
 import unittest
-from root.data import DataContainer
-from root.gravity import D2GravityModel
-import root.directsolve as grm
+from root.gravity2d.data import DataContainer
+from root.gravity2d.gravity import D2GravityModel
+import root.gravity2d.directsolve as grm
 import numpy as np
 
 class Test(unittest.TestCase):

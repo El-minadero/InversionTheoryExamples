@@ -5,7 +5,7 @@ Created on Sep 24, 2017
 '''
 import unittest
 import numpy as np
-from root.gravity import D2GravityModel
+from root.gravity2d.gravity import D2GravityModel
 
 class Test(unittest.TestCase,):
     """
