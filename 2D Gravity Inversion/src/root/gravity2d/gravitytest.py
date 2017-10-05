@@ -57,14 +57,14 @@ class Test(unittest.TestCase,):
     def testPositiveGravityEvaluation(self):
         x = np.array([2])
         z = np.array([3])
-        g = self.gravityModel._gravity(x, z)
+        g = self.gravityModel._gravity_integral(x, z)
         a = self._self_gravity(x,z)
         self.assertAlmostEquals(g[0],a,5,"gravity PROBLEMS!!")
         
     def testNegativeGravityEvaluation(self):
         x = np.array([-2])
         z = np.array([-3])
-        g1 = self.gravityModel._gravity(x, z)
+        g1 = self.gravityModel._gravity_integral(x, z)
         g0 = self._self_gravity(x, z)
         np.testing.assert_array_equal(g1,g0,"gravity PROBLEMS!!")
         self.assertGreaterEqual(g1.all(),0,"gravity is negative")
@@ -77,7 +77,7 @@ class Test(unittest.TestCase,):
        
         xoff = x - x_prime
         
-        g1 = self.gravityModel._gravity(xoff, z)
+        g1 = self.gravityModel._gravity_integral(xoff, z)
         g0 = self._self_gravity(xoff, z)
        
         self.assertGreaterEqual(g0.all(),0, "how I understand gravity is broken")

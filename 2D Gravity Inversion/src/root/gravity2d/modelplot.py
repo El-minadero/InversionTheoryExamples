@@ -3,17 +3,16 @@ Created on Sep 25, 2017
 
 @author: kevinmendoza
 '''
-import root.gravity2d.directsolve as ds
 import matplotlib        as mpl
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as grd
 import numpy as np
 import PIL.Image     as image
 
-def plot(model,data,coefficients):
+def plot(model,data):
     
-    data_dict                       = _prepare_data(model,data,coefficients)
-    data_dict["Image"]              = _build_model_image(coefficients,model)
+    data_dict                       = _prepare_data(model,data)
+    data_dict["Image"]              = _build_model_image(model)
     
     gs = grd.GridSpec(2, 2, height_ratios=[1,1], width_ratios=[20,1], wspace=0.2,hspace=1)
     
@@ -60,14 +59,15 @@ def _plot_time_series(axis,data):
     axis.set_xlim(0,x_max)
     axis.set_ylim(0,y_max*1.1)
     
-def _build_model_image(coefficients=None,model=None):
-    cells       = np.vstack((coefficients,model.x_offsets,model.z_offsets))
+def _build_model_image(model=None):
+    
+    cells       = np.vstack((model.coefficients,model.x_offsets,model.z_offsets))
     img         = _make_cell_image(cells,model)
     return img
     
-def _prepare_data(model=None,data=None,coefficients=None):
+def _prepare_data(model=None,data=None):
     
-    synthetic_data             = ds.get_synthetic_data(coefficients, model, data)
+    synthetic_data             = model.get_synthetic_data(data)
     
     gz_data                    = data.getXData()
     x_data                     = data.getXLocations()
