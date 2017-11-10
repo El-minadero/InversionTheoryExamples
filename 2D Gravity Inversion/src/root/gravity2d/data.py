@@ -6,6 +6,23 @@ Created on Sep 23, 2017
 import numpy as np
 import csv
 
+def convert_file_to_array(file):
+    d  = open(file,'r') 
+    d1 = [line.strip("\n")   for line in d ]
+    d1 = [line.strip(",")    for line in d1]
+    d1 = [line.strip("\t")   for line in d1]
+    d_final = [line          for line in d1 if line.strip() != '']
+    data = []
+    [data.append(float(datum)) for datum in d_final]
+    return data
+    
+def get_model_extent(file):
+    array = convert_file_to_array(file)
+    upper = np.max(array)
+    lower = np.min(array)
+    divisions = len(array)-1
+    return (lower,upper,divisions)
+
 class Data:
     def __init__(self):
         pass
@@ -77,26 +94,11 @@ class DataLoader(Data):
         super().__init__()
         
     def load_data(self,data,position):
-        d = open(data,'r') 
-        p = open(position,'r')
-        data=[]
-        loc = []
-        for line in d:
-            l = line.strip()
-            l = l.strip('\n')
-            l = l.strip('\t')
-            l = float(l)
-            data.append(l)
+        values   = convert_file_to_array(data)
+        location = convert_file_to_array(position)
         
-        for line in p:
-            l = line.strip("\n")
-            l = l.split(",")
-            for i in range(0, len(l)):
-                loc.append(float(l[i]))
-       
-        
-        self.replaceMeasuredLocations(loc)
-        self.replaceMeasuredValues(data)
+        self.replaceMeasuredLocations(location)
+        self.replaceMeasuredValues(values)
 
 
 class DataContainer(AutoDataGenerator,DataLoader):
