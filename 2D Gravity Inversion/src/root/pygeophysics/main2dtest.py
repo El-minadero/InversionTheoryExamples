@@ -3,10 +3,9 @@ Created on Sep 23, 2017
 
 @author: kevinmendoza
 '''
-import root.gravity2d.data as data_functions
-from    root.gravity2d.data       import DataContainer
-from    root.gravity2d.gravity    import D2GravityModel
-import  root.gravity2d.modelplot   as p
+import  root.pygeophysics.data      as data_functions
+from    root.pygeophysics.data      import DataContainer
+from    root.pygeophysics.gravity   import D2GravityModel
 
 def extract_model_parameters():
     pass
@@ -51,5 +50,5 @@ if __name__ == '__main__':
     condition = model._c
     print("the condition number is:" + str(condition))
     print("upper model error bound is:" + str(0.01*condition))
-    p.plot(**problem_dict)
+    #p.plot(**problem_dict)
 

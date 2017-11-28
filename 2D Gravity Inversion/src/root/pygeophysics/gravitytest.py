@@ -7,9 +7,9 @@ import unittest
 import numpy as np
 from root.gravity2d.gravity import D2GravityModel
 
-class Test(unittest.TestCase,):
+class TestModelStorage(unittest.TestCase,):
     """
-    Test the gravity model class
+    TestModelStorage the gravity model class
     """
     
     def _self_gravity(self,x,z):
@@ -85,5 +85,5 @@ class Test(unittest.TestCase,):
         np.testing.assert_array_equal(g1.all(),g0.all(), "either gravity or model might be broken")
         
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
+    #import sys;sys.argv = ['', 'TestModelStorage.testName']
     unittest.main()
