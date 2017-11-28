@@ -37,7 +37,7 @@ class Controller():
         self.storage = storage
         
     def solve(self,data):
-        model    = self.storage.structure['model']
+        model    = self.storage.structure['model'].model
         response = self.storage.structure['response']
         solution = self.storage.structure['solver'].solve(model,response,data)
         return solution

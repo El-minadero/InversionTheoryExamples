@@ -41,11 +41,14 @@ class SeismicFrequencyDomainResponse():
         return w*(0+2j)/self.V_o
 
 
-class SeismicFrequencyDomainResponseIntegration(SeismicFrequencyDomainResponse):
+class SeismicFrequencyDomainIntegrationResponse():
     name = "seismic frequency integral"
-    def __init(self):
+    def __init__(self):
         self.base = SeismicFrequencyDomainResponse()
         
+    def update(self,**kwargs):
+        pass
+    
     def extract_observed_data(self,data):
         return self.base.extract_observed_data(data)
     
@@ -53,12 +56,12 @@ class SeismicFrequencyDomainResponseIntegration(SeismicFrequencyDomainResponse):
         return self.base.extract_observed_locations(data)
     
     def get_basis(self,model,data_offsets,index):
-        w = self._get_angular_array(data_offsets[index])
-        upper_model = model.get_offsets() + model.get_deltas()
-        lower_model = model.get_offsets()
+        w = self.base._get_angular_array(data_offsets[index])
+        lower_model = model.get_offsets() + model.get_deltas()
+        upper_model = model.get_offsets()
         upper_bound = self.base._get_basis(upper_model, data_offsets, index)
         lower_bound = self.base._get_basis(lower_model, data_offsets, index)
-        value = (upper_bound - lower_bound)/self._get_exponential_constant(w)
+        value = -(upper_bound - lower_bound)/self.base._get_exponential_constant(w)
         return value
     
 class PolynomialResponse():
@@ -97,7 +100,7 @@ def __update_response__(response_type=None,**kwargs):
         elif "seismic" in re:
             if "frequency" in re:
                 if "integral" in re:
-                    return SeismicFrequencyDomainResponseIntegration()
+                    return SeismicFrequencyDomainIntegrationResponse()
                 else:
                     return SeismicFrequencyDomainResponse()
     

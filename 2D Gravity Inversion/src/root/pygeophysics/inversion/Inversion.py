@@ -12,8 +12,8 @@ class Inversion():
         self.storage    = InversionStorage()
         self.controller = Controller(self.storage)
         
-    def update(self,kwargs):
-        self.storage.update(kwargs)
+    def update(self,**kwargs):
+        self.storage.update(**kwargs)
         
     def solve(self,data):
         self.problem = self.controller.solve(data)
