@@ -5,6 +5,7 @@ Created on Nov 25, 2017
 '''
 import numpy as np
 from cmath import inf
+import scipy.io as sio
 
 def _get_condition( A, r='max'):
     u, q, v = np.linalg.svd(A)
@@ -22,7 +23,7 @@ def _get_condition( A, r='max'):
     '''
 def _create_A_matrix(model, response, data):
     d_length = len(response.extract_observed_data(data))
-    vander   = response.get_basis(model,data, index=0)
+    vander   = np.asarray(response.get_basis(model,data, index=0),dtype=np.complex64)
     for i in range(1, d_length):
         toAdd = response.get_basis(model,data, index=i)
         vander = np.vstack((vander, toAdd))
@@ -54,48 +55,54 @@ class DirectLinearSolver():
         pass
     
 class RegularizedLinearSolver():
-    name = "direct linear solver"
+    name = "direct regularized linear solver"
     def __init__(self):
         self.alpha  = 1
         self.m_apri = None
+        self.r=1e6
     
     def solve(self,model,response,data):
             
-        d0  = response.extract_observed_data(data)
-        a   = _create_A_matrix(model,response,data)
-        first = self._construct_first(a)
-        second= self._construct_second(a,d0)
-        x   = first.dot(second)
-        d   = a.dot(x[0])
-        return (a,  x[0], d)
+        d0      = response.extract_observed_data(data)
+        a       = _create_A_matrix(model,response,data)
+        sio.savemat('testdict.mat',{'a':a,'d0':d0,'m':self.m_apri,'alpha':self.alpha})
+        at      = a.T.conj()
+        first   = np.real(at.dot(a))  + self.alpha*np.eye(a.shape[1], a.shape[1])
+        m_t     = self.alpha*self._get_model_term(a)
+        ad      = np.real(at.dot(d0))
+        second  = ad + m_t
+        invFirst= np.linalg.pinv(first)
+        x       = invFirst.dot(second)
+        d       = a.dot(x)
+        if self.return_residuals:
+            return (a,  x, d,self._calculate_misfits(x,d,d0))
+        else:
+            return (a,  x, d)
     
-    def _construct_first(self,a):
-        first = self._get_Re(a,a)
-        first = first + self.alpha*np.identity(first.shape[0])
-        first = np.linalg.inv(first)
-        return first
-    
-    def _construct_second(self,a,d0):
-        second = self._get_Re(a,d0)
-        second = second + self._get_model_term(second)
-        return second
+    def _calculate_misfits(self,x,d,d0):
+        a = self.alpha
+        misfit = d-d0
+        misfit = misfit.T.conj().dot(misfit)
+        misfit = np.linalg.norm(misfit)
+
+        stabil = x - self.m_apri
+        stabil = stabil.T.conj().dot(stabil)
+        stabil = np.linalg.norm(stabil)
+        paramet= misfit + stabil*a
+        return {'misfit':misfit,'stabilizer':stabil*self.r,'parametric':paramet}
     
     def _get_model_term(self,reA):
         if self.m_apri is None:
             self.m_apri = np.ones((reA.shape[0],1))
-        ret = self.alpha*self.m_apri
-        return ret
+        return self.m_apri
     
-    def _get_Re(self,a,b):
-        a_s = a.conj().T
-        b_s = b.conj().T
-        t = a_s.dot(b)
-        c = b_s.dot(a)
-        return t+c
-    
-    def update(self,m_apri=None,alpha=0,**kwargs):
-        self.alpha = alpha*np.power(10,6)
-        self.m_apri=m_apri
+    def update(self,**kwargs):
+        if 'return_residuals'   in kwargs:
+            self.return_residuals=kwargs['return_residuals']
+        if 'alpha'              in kwargs:
+            self.alpha = kwargs['alpha']*self.r
+        if 'm_apri'             in kwargs:
+            self.m_apri=kwargs['m_apri']
     
 def __update_solver__(solver_type=None,**kwargs):
     if solver_type is not None:

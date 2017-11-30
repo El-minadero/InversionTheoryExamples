@@ -72,7 +72,6 @@ class DataFormat(ParameterIO):
     def __init__(self,**kwargs):
         super().__init__()
         self._loadable_ = False
-        self._data = {}
         
     def _set_data(self,**kwargs):
         if kwargs!={}:
@@ -91,9 +90,14 @@ class DataContainer(DataFormat):
     values_per_line=3
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
+        self.data = {}
         
-    def set_data(self,**kwargs):
+    def set_loading_data(self,**kwargs):
         self._set_data(**kwargs)
+        
+    def set_array_data(self,**kwargs):
+        for key in kwargs:
+            self.data[key] = kwargs[key]
         
     def load_data(self,**kwargs):
         if len(kwargs.keys()) == 0:
@@ -108,7 +112,4 @@ class DataContainer(DataFormat):
         '''
             returns the observed data dictionary
         '''
-        if self._loadable_:
-            return self.data[key]
-        else:
-            return [0]
+        return self.data[key]

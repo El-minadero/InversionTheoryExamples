@@ -22,7 +22,7 @@ class TestInversion(unittest.TestCase):
             }
         self.data   = DataContainer()
         self.inversion = Inversion()
-        self.data.set_data(**data_test)
+        self.data.set_loading_data(**data_test)
         self.data.load_data()
     
     def testInversionPolySolve(self):

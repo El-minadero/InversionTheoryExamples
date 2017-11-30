@@ -84,16 +84,22 @@ class SeismicFrequencyDomainIntegrationResponse():
     def extract_observed_locations(self,data):
         return self.base.extract_observed_locations(data)
     
+    def _get_exponential_term_(self,w,z):
+        expression  = self._get_exponential_constant(w)*z
+        return np.exp(expression)
+    def _get_exponential_constant(self,w):
+        return 2*w*(0+1j)/self.V_o
+    
     def get_basis(self,model,data_offsets,index):
         w = self.base._hz_to_w(data_offsets[index])
         
         lower_model = model.get_offsets() + model.get_deltas()
         upper_model = model.get_offsets()
         
-        upper_bound = self.base._get_basis(upper_model, data_offsets, index)
-        lower_bound = self.base._get_basis(lower_model, data_offsets, index)
+        upper_bound = self.base._get_exponential_term_(w, upper_model)
+        lower_bound = self.base._get_exponential_term_(w, lower_model)
         
-        value = -(upper_bound - lower_bound)/self.base._get_exponential_constant(w)
+        value = -self.base.V_o*(upper_bound - lower_bound)/8
         return value
     
 class PolynomialResponse():
