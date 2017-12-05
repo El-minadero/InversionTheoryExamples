@@ -65,7 +65,7 @@ if __name__ == '__main__':
                      'periods'   : [0.001,0.05,0.1,0.5,1,5,10,50,100,500]
         }
     d0 = dat['apparent resistivities']
-    weights = [0.4375,0.003375,0.00225]
+    weights = [0,0.00,0.00]
     alpha = 0.1
     response.update(response_type='1d mt')
     data.set_array_data(**dat)
@@ -82,12 +82,12 @@ if __name__ == '__main__':
             alphas = weights,\
             priori_model=4000,\
             mapri=[4000,4000,4000],\
-            alpha=0.1,
+            alpha=0,
             )
     dx = data.get_data('periods')
    
     params = solver.solve(model,response,data)
-    #plot_model(model.get_offsets(),m,params[0][-1])
+    plot_model(model.get_offsets(),m,params[0][-1])
     #plot_convergence(params[3],params[4])
-    plot_forward(dx,params[1][-1],d0)
+    #plot_forward(dx,params[1][-1],d0)
     plt.show()

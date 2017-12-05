@@ -132,7 +132,7 @@ class NLSteepestDescent(NLAbstract):
         gnorm = get_L2_norm(gm)
         kn  = np.divide(lnorm,gnorm + lnorm*alpha)
         
-        return - kn*L_m/2
+        return - kn*L_m
 
 class NLNewton():
     name = "newton"
