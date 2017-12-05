@@ -3,16 +3,16 @@ Created on Nov 27, 2017
 
 @author: kevinmendoza
 '''
-from root.pygeophysics.inversion.InversionModels    import Model
-from root.pygeophysics.inversion.InversionResponse  import Response
-from root.pygeophysics.inversion.InversionSolutions import Solution
+from root.pygeophysics.inversion.InversionModels import Model
+from root.pygeophysics.inversion.lresponse      import LinearResponse
+from root.pygeophysics.inversion.lsolver        import LinearSolver
     
 class InversionStorage():
     def __init__(self):
         self.structure = {}
         self.structure['model']      = Model()
-        self.structure['response']   = Response()
-        self.structure['solver']     = Solution()
+        self.structure['response']   = LinearResponse()
+        self.structure['solver']     = LinearSolver()
         
     def update(self,update_model=False,update_response=False,update_solver=False, \
                 custom_model=None,custom_response=None,custom_solver=None,**kwargs):

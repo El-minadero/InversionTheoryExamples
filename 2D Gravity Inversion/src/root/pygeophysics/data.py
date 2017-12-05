@@ -63,7 +63,7 @@ class ParameterIO():
             array = convert_csv_file_to_array(file_path)
         else:
             array = np.zeros(20,1)
-        return array
+        return np.asarray(array)
     
     def _get_data_extent(self,data):
         return get_array_extent(data)
@@ -97,7 +97,7 @@ class DataContainer(DataFormat):
         
     def set_array_data(self,**kwargs):
         for key in kwargs:
-            self.data[key] = kwargs[key]
+            self.data[key] = np.asarray(kwargs[key])
         
     def load_data(self,**kwargs):
         if len(kwargs.keys()) == 0:

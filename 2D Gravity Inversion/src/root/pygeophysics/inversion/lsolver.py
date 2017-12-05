@@ -4,7 +4,6 @@ Created on Nov 25, 2017
 @author: kevinmendoza
 '''
 import numpy as np
-from cmath import inf
 import scipy.io as sio
 
 def _get_condition( A, r='max'):
@@ -13,7 +12,7 @@ def _get_condition( A, r='max'):
         qp = q[:r]
         return np.max(qp) / np.min(qp)
     else:
-        return inf
+        return 100000000000000
     '''
         produces the vander matrix where each element is defined as:
         a_ij = f(observed_data_i,model_parameter_response_j). f(data,model) 
@@ -21,9 +20,9 @@ def _get_condition( A, r='max'):
         @param data a DataContainer object holding the data to be modeled. 
         @return vander, the vandermonde matrix
     '''
-def _create_A_matrix(model, response, data):
+def _create_A_matrix(model, response, data,dtype=np.complex64):
     d_length = len(response.extract_observed_data(data))
-    vander   = np.asarray(response.get_basis(model,data, index=0),dtype=np.complex64)
+    vander   = np.asarray(response.get_basis(model,data, index=0),dtype=dtype)
     for i in range(1, d_length):
         toAdd = response.get_basis(model,data, index=i)
         vander = np.vstack((vander, toAdd))
@@ -44,7 +43,7 @@ class DirectLinearSolver():
         pass
     def solve(self,model,response,data):
         d0  = response.extract_observed_data(data)
-        a   = _create_A_matrix(model,response,data)
+        a   = _create_A_matrix(model,response,data,dtype=np.float64)
         at  = a.T
         x   = np.linalg.inv(at.dot(a))
         x   = x.dot(at.dot(d0))
@@ -104,10 +103,10 @@ class RegularizedLinearSolver():
         if 'm_apri'             in kwargs:
             self.m_apri=kwargs['m_apri']
     
-def __update_solver__(solver_type=None,**kwargs):
-    if solver_type is not None:
-        if "linear" in solver_type:
-            if "regularized" in solver_type:
+def __update_solver__(r_type=None,**kwargs):
+    if r_type is not None:
+        if "linear" in r_type:
+            if "regularized" in r_type:
                 solver = RegularizedLinearSolver()
             else:
                 solver = DirectLinearSolver()
@@ -115,7 +114,7 @@ def __update_solver__(solver_type=None,**kwargs):
         
     return None
     
-class Solution():
+class LinearSolver():
     def __init__(self):
         self.solution_params = (0,0,0)
         self.solver = DirectLinearSolver()

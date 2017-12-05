@@ -5,7 +5,7 @@ Created on Nov 27, 2017
 '''
 import unittest
 
-from root.pygeophysics.inversion.InversionResponse import Response
+from root.pygeophysics.inversion.lresponse import LinearResponse
 
 class IntegralSeismicTest(unittest.TestCase):
     pass
@@ -23,9 +23,9 @@ class ResponseFactoryTest(unittest.TestCase):
     
     response_keys = [ 'Polynomial','Gravity Value','Seismic frequency','seismic frequency Integral']
     name_responses= [ 'polynomial','gravity value','seismic frequency','seismic frequency integral']
-    start_msg = 'Response update failed.\n Should have converted to:'
+    start_msg = 'LinearResponse update failed.\n Should have converted to:'
     def setUp(self):
-        self.response = Response()
+        self.response = LinearResponse()
         
     def testResponseFactoryGravity(self):
         source = "gravity value"

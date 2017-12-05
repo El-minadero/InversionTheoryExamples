@@ -6,6 +6,26 @@ Created on Nov 25, 2017
 import numpy as np
 import scipy.fftpack as ftp
 
+class D1MagnetotelluricResponse():
+    def __init__(self):
+        pass
+    
+    def update(self, **kwargs):
+        pass
+
+    
+    def extract_observed_data(self, data):
+        return data.get_data('apparent resistivity')
+    
+    def extract_observed_locations(self, data):
+        return data.get_data('period')
+    
+    def get_basis(self,model,data_offsets,index):
+        model_offsets = model.get_offsets()
+        return self._get_basis(model_offsets,data_offsets,index)
+    
+    
+
 class SeismicFrequencyDomainResponse():
     name = 'seismic frequency'
     pi2 = np.pi * 2
@@ -143,8 +163,8 @@ def __update_response__(response_type=None,**kwargs):
                     return SeismicFrequencyDomainResponse()
     
     return None
-    
-class Response():
+
+class LinearResponse():
     def __init__(self):
         self.response = PolynomialResponse()
         
